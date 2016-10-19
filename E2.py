@@ -19,12 +19,14 @@ else:
     for row in rows:
         if('<tipo>Accidente' in row):
             Xaux=[]
-            Xaux.append(float(row[row.find('<latitud>')+latLen:row.find('</latitud>')]))
             Xaux.append(float(row[row.find('<longitud>')+lonLen:row.find('</longitud>')]))
+            Xaux.append(float(row[row.find('<latitud>')+latLen:row.find('</latitud>')]))
+            
             X.append(Xaux)
             nElements+=1
     print("Accidents: "+str(nElements))
     X=np.array(X)
+    xml.close()
 # plot the data
 plt.scatter(X[:,0], X[:,1])
 plt.show()
@@ -42,13 +44,13 @@ print("Silhouette Coefficient: %0.3f"
      
 #Plot results
 colors=['b','g','r','c','m','y','k','w']
-markers=['o','v','^','+']
+markers=['o','v','^','+',]
 nMark=len(markers)
 nCol=len(colors)
 clust=max(y_db)
 for i in range(-1,clust+1):
     plt.scatter(X[y_db==i,0], X[y_db==i,1],c=colors[i%nCol], marker=markers[(i//nCol)%nMark], s=15, label='cluster '+str(i)) 
 #plt.legend()
-plt.savefig('asd.png', dpi=1000)
+plt.savefig('figure2.png', dpi=1000)
 
 print('Clusters: '+str(clust))
