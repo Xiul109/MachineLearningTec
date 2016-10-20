@@ -8,7 +8,7 @@ import numpy as np
 
 # Obtain coordinates
 if(len(sys.argv) is not 2):
-    print("Usage: python3 E2.py <file>")
+    print("Usage: python3 E3.py <file>")
 else:
     xml=open(sys.argv[1],'r',encoding='latin-1')
     rows=xml.read().split('<incidenciaGeolocalizada>')[1:]
@@ -44,7 +44,7 @@ print("Silhouette Coefficient: %0.3f"
      
 #Plot results
 colors=['b','g','r','c','m','y','k','w']
-markers=['o','v','^','+']
+markers=['o','v','^','+','x','8','s','p','*','h','D']
 nMark=len(markers)
 nCol=len(colors)
 clust=max(y_db)

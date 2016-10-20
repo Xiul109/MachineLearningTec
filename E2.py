@@ -5,7 +5,7 @@
 
 import sys
 if len(sys.argv) is not 2:
-	print ("Usage: python3 E1.py <file>")
+	print ("Usage: python3 E2.py <file>")
 else:
 	xml=open(sys.argv[1],"r", encoding="latin-1")
 	rows=xml.read().split('<raiz>')[1].replace('</raiz>','').split('<incidenciaGeolocalizada>')[1:]
