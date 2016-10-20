@@ -9,6 +9,7 @@ import numpy as np
 # Obtain coordinates
 if(len(sys.argv) is not 2):
 	print("Usage: python3 E4.py <file>")
+	exit()
 else:
 	xml=open(sys.argv[1],'r',encoding='latin-1')
 	rows=xml.read().split('<incidenciaGeolocalizada>')[1:]
@@ -27,39 +28,60 @@ else:
 	print("Accidents: "+str(nElements))
 	X=np.array(X)
 	xml.close()
-# plot the data
-plt.scatter(X[:,0], X[:,1])
-plt.show()
+
+
+##KMeans
 
 #Clustering execution
 from sklearn.cluster import KMeans
 from sklearn import metrics
 
 k1=20
-k2=100
-steps=10
+k2=40
+steps=2
 iterations=10
 max_iter=50
 tol=1e-04
 random_state=0
-y_km= None
+y_kmL= []
 
-
+ks=[]
+sil=[]
 for k in range(k1,k2,steps):
 	km = KMeans(k, 'random', n_init = iterations, max_iter=max_iter, tol=tol,random_state=random_state)
-	y_km = km.fit_predict(X)
+	y_km=km.fit_predict(X)
+	y_kmL.append(y_km)
 	# Silhouette coefficient
-	print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, y_km))
+	ks.append(k)
+	sil.append(metrics.silhouette_score(X, y_km))
 
 #Plot results
+bestSil=max(sil)
+i=sil.index(bestSil)
+k=ks[i]
+y_km=y_kmL[i]
+print('Clusters: '+str(k))
+print('Silhouette: %0.3f'%bestSil)
+
+plt.scatter(ks, sil,c='blue', marker='o', s=20,)
+plt.plot(ks, sil)
+plt.show()
+
 colors=['b','g','r','c','m','y','k','w']
 markers=['o','v','^','+','x','8','s','p','*','h','D']
 nMark=len(markers)
 nCol=len(colors)
-clust=max(y_km)
-for i in range(-1,clust+1):
-	plt.scatter(X[y_km==i,0], X[y_km==i,1],c=colors[i%nCol], marker=markers[(i//nCol)%nMark], s=15, label='cluster '+str(i)) 
-#plt.legend()
-plt.savefig('figure3.png', dpi=1000)
+for i in range(k):
+	plt.scatter(X[y_km==i,0], X[y_km==i,1],c=colors[i%nCol], marker=markers[(i//nCol)%nMark], s=15, label='cluster '+str(i))
 
-print('Clusters: '+str(clust))
+plt.savefig('figure4-KMeans.png', dpi=1000)
+
+##EM
+
+
+
+##Spectral
+
+
+
+
