@@ -4,19 +4,22 @@
 #Iván García Pulido
 
 import sys
-if len(sys.argv) is not 2:
-	print ("Usage: python3 E2.py <file>")
+import xml.etree.ElementTree as ET
+import csv
+
+columns=['tipo', 'autonomia', 'provincia', 'matricula', 'causa', 'poblacion', 'fechahora_ini', 'nivel', 'carretera', 'pk_inicial', 'pk_final', 'sentido','longitud', 'latitud']
+table=[columns]
+if len(sys.argv) is not 3:
+	print ("Usage: python3 E2.py <in_file> <out_file>")
 else:
-	xml=open(sys.argv[1],"r", encoding="latin-1")
-	rows=xml.read().split('<raiz>')[1].replace('</raiz>','').split('<incidenciaGeolocalizada>')[1:]
-	xml.close()
+	xml=ET.parse(sys.argv[1])
+	root=xml.getroot()
 	cuenta=0
-	fichero=open('salida.xml','w')
-	fichero.close()
-	fichero=open('salida.xml','a')
-	for row in rows:
-		if '<provincia>BIZKAIA' in row:
-			cuenta+=1
-			fichero.write('<incidenciaGeolocalizada>'+row+'\n')
-	fichero.close()
+	for el in root:
+		if el.findall('provincia')[0].text == 'BIZKAIA':
+			table.append([el.findall(e)[0].text for e in columns])
+			cuenta+=1 
+	with open(sys.argv[2],'w') as f:
+		writer=csv.writer(f)
+		writer.writerows(table)
 	print("Registers: "+str(cuenta))
