@@ -5,6 +5,7 @@
 import matplotlib.pyplot as plt
 import sys
 import numpy as np
+import csv
 
 #Plot function
 def plot(sil, ks, y_xsL, X, name):
@@ -19,6 +20,7 @@ def plot(sil, ks, y_xsL, X, name):
 	
 	plt.scatter(ks, sil,c='blue', marker='o', s=20,)
 	plt.plot(ks, sil)
+	plt.title(name+'-sil')
 	plt.savefig('figure4-'+name+'-sil.png', dpi=200)
 	plt.clf()
 	
@@ -27,8 +29,11 @@ def plot(sil, ks, y_xsL, X, name):
 	nMark=len(markers)
 	nCol=len(colors)
 	for i in range(k):
-		plt.scatter(X[y_xs==i,0], X[y_xs==i,1],c=colors[i%nCol], marker=markers[(i//nCol)%nMark], s=15, label='cluster '+str(i))
+		plt.scatter(X[y_xs==i,0], X[y_xs==i,1],c=colors[i%nCol],marker=markers[(i//nCol)%nMark], s=15, label='cluster '+str(i))
 	
+	plt.title(name+'-clusts')
+	plt.xlabel("Latitude")
+	plt.ylabel("Longitude")
 	plt.savefig('figure4-'+name+'-clusts.png', dpi=1000)
 	plt.clf()
 
@@ -38,25 +43,17 @@ def dataExtraction():
 		print("Usage: python3 E4.py <file>")
 		exit()
 	else:
-		xml=open(sys.argv[1],'r',encoding='latin-1')
-		rows=xml.read().split('<incidenciaGeolocalizada>')[1:]
-		latLen=len('<latitud>')
-		lonLen=len('<longitud>')
+		csv_file=csv.DictReader(open(sys.argv[1]))
+
 		X=[]
 		nElements=0
-		for row in rows:
-			if('<tipo>Accidente' in row):
-				Xaux=[]
-				Xaux.append(float(row[row.find('<longitud>')+lonLen:row.find('</longitud>')]))
-				Xaux.append(float(row[row.find('<latitud>')+latLen:row.find('</latitud>')]))
-				
-				X.append(Xaux)
+		for row in csv_file:
+			if(row['tipo']=='Accidente'):
+				X.append([float(row['longitud']), float(row['latitud'])])
 				nElements+=1
 		print("Accidents: "+str(nElements))
-		print()
 		X=np.array(X)
-		xml.close()
-	return X
+		return X
 
 #Program Execution
 def algorithmExecution(algF,X, metrics, k1, k2, steps, name):
