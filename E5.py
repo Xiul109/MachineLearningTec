@@ -101,3 +101,50 @@ with open(sys.argv[2],'w') as f:
 	writer.writeheader()
 	writer.writerows(outputData)
 
+
+#PCA
+from sklearn.decomposition import PCA
+from sklearn import preprocessing
+import sklearn.cluster
+import numpy
+#Transforming the list of dictionarys to a list of lists
+states=[]
+for element in outputData:
+	state=[]
+	for key, value in element.items():
+		if key !='label':
+			state.append(value)
+	states.append(state)
+
+#Normalization of the data
+min_max_scaler = preprocessing.MinMaxScaler()
+states = min_max_scaler.fit_transform(states)
+        
+#PCA Estimation
+estimator = PCA (n_components = 2)
+X_pca = estimator.fit_transform(states)
+
+#Plotting
+#k-means clustering
+k = 3
+centroids, labels, z =  sklearn.cluster.k_means(states, k, init="k-means++" )
+
+#plot 
+colors = ['b', 'r', 'g']
+numbers = numpy.arange(len(X_pca))
+
+fig, ax = plt.subplots()
+
+for i in range(len(X_pca)):
+    plt.text(X_pca[i][0], X_pca[i][1], numbers[i], color=colors[labels[i]]) 
+   
+plt.xlim(-2, 4)
+plt.ylim(-0.5, 1.5)
+
+
+ax.grid(True)
+fig.tight_layout()
+
+plt.savefig('E5-PCA.png', dpi=1000)
+
+
