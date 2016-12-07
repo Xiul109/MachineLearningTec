@@ -29,7 +29,6 @@ if (arglen==4 or arglen==6):
 	
 	xml=ET.parse(sys.argv[in_file])
 	root=xml.getroot()
-	cuenta=0
 	for el in root:
 		lat=el.findall('latitud')[0].text
 		alt=el.findall('longitud')[0].text
@@ -38,18 +37,14 @@ if (arglen==4 or arglen==6):
 			alt=float(alt)
 		if el.findall('provincia')[0].text == sys.argv[1] and min_lat<=lat<=max_lat and min_lon<=alt<=max_lon:
 			table.append([el.findall(e)[0].text for e in columns])
-			cuenta+=1 
 			
-#	print(table[0])
 	dataFrame=pd.DataFrame(table,columns=columns)
-	print(dataFrame['latitud'].size)
 	dataFrame=dataFrame.drop_duplicates()
-	print(dataFrame['latitud'].size)
 	csv_file=dataFrame.to_csv(index=False)
 	
 	with open(sys.argv[out_file],'w') as f:
 		f.write(csv_file)
-	print("Registers: "+str(cuenta))
+	print("Registers: "+dataFrame['latitud'].size)
 else:
 	print ("Usage: python3 E2.py <provice> [<min lon>:<max lon> <min lat>:<max lat>] <in_file> <out_file>")
 	print ("Example python3 E2.py BIZKAIA 42.9:43.5 -3.5:-2.2 in_file.xml out_file.csv")
