@@ -2,6 +2,7 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import neighbors
+import sys
 
 #Split the accidentsData leaving split_factor * Ndata as training data and  (1-split_factor) * Ndata as test data 
 split_factor=0.6
