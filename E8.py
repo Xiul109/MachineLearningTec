@@ -3,14 +3,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import neighbors
 
+#Split the accidentsData leaving split_factor * Ndata as training data and  (1-split_factor) * Ndata as test data 
 split_factor=0.6
 
+if(len(sys.argv) is not 3):
+	print("Usage: python3 E5.py <input_file> <output_file>")
+	exit()
+
+#Gets the K value
 def getK():
 	#Load Data
-#	csv_file=pd.read_csv('zone.csv', sep=',',encoding='Latin1')
-#	data=[csv_file['latitud'].tolist(),csv_file['longitud'].tolist(),csv_file['label'].tolist()]
 	data=[]
-	csv_file=csv.DictReader(open('zone.csv'))
+	csv_file=csv.DictReader(open(sys.argv[1]))
 	for row in csv_file:
 		data.append([float(row['longitud']), float(row['latitud']),int(row['label'])])
 
@@ -37,6 +41,10 @@ def getK():
 		clf.fit(trainX,trainY)
 		error.append(getErrorProp(clf.predict(testX),testY))
 		k.append(i)
+	plt.plot(k,error)
+	plt.xlabel('K')
+	plt.ylabel('Error')
+	plt.show()
 	return k[error.index(min(error))]
 
 def getErrorProp(prediction,test):
@@ -57,7 +65,7 @@ for row in data:
 		worksX.append([float(row['longitud']), float(row['latitud'])])
 worksX=np.array(worksX)
 
-csv_file=csv.DictReader(open('zone.csv'))
+csv_file=csv.DictReader(open(sys.argv[2]))
 X=[]
 y=[]
 for row in csv_file:

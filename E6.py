@@ -7,7 +7,7 @@ import sklearn.neighbors
 from scipy import cluster
 
 if(len(sys.argv) is not 3):
-	print("Usage: python3 E3.py <input_file>  <output_file>")
+	print("Usage: python3 E6.py <input_file> <output_file>")
 	exit()
 csv_file=csv.reader(open(sys.argv[1]))
 aux=list(csv_file)

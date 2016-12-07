@@ -10,8 +10,8 @@ import csv
 # Obtain coordinates
 accidentsData=[]
 
-if(len(sys.argv) is not 3):
-	print("Usage: python3 E3.py <input_file> <output_file>")
+if(len(sys.argv) is not 4):
+	print("Usage: python3 E5.py <input_file> <output_file1> <output_file2>")
 	exit()
 else:
 	csv_file=csv.DictReader(open(sys.argv[1]))
@@ -47,6 +47,14 @@ label='label'
 
 for i in range(len(y)):
 	accidentsData[i][label]=y[i]
+
+#Write accidentsData in a csv
+with open(sys.argv[2], 'w') as csvfile:
+	fieldnames = list(accidentsData[0].keys())
+	writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+	writer.writeheader()
+	writer.writerows(accidentsData)
 
 #Feature Selection
 outputData=[]
@@ -96,7 +104,7 @@ for i in range(len(outputData)):
 	element[road]=countRoads(cluster)
 
 #CSV Generation
-with open(sys.argv[2],'w') as f:
+with open(sys.argv[3],'w') as f:
 	writer=csv.DictWriter(f,features)
 	writer.writeheader()
 	writer.writerows(outputData)

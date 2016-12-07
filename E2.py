@@ -6,9 +6,10 @@
 import sys
 import xml.etree.ElementTree as ET
 import csv
+import pandas as pd
 
 columns=['tipo', 'causa', 'poblacion', 'fechahora_ini', 'nivel', 'carretera', 'pk_inicial', 'pk_final', 'sentido','longitud', 'latitud']
-table=[columns]
+table=[]
 
 arglen=len(sys.argv)
 if (arglen==4 or arglen==6):
@@ -38,9 +39,16 @@ if (arglen==4 or arglen==6):
 		if el.findall('provincia')[0].text == sys.argv[1] and min_lat<=lat<=max_lat and min_lon<=alt<=max_lon:
 			table.append([el.findall(e)[0].text for e in columns])
 			cuenta+=1 
+			
+#	print(table[0])
+	dataFrame=pd.DataFrame(table,columns=columns)
+	print(dataFrame['latitud'].size)
+	dataFrame=dataFrame.drop_duplicates()
+	print(dataFrame['latitud'].size)
+	csv_file=dataFrame.to_csv(index=False)
+	
 	with open(sys.argv[out_file],'w') as f:
-		writer=csv.writer(f)
-		writer.writerows(table)
+		f.write(csv_file)
 	print("Registers: "+str(cuenta))
 else:
 	print ("Usage: python3 E2.py <provice> [<min lon>:<max lon> <min lat>:<max lat>] <in_file> <out_file>")
