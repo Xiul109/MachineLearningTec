@@ -44,7 +44,7 @@ if (arglen==4 or arglen==6):
 	
 	with open(sys.argv[out_file],'w') as f:
 		f.write(csv_file)
-	print("Registers: "+dataFrame['latitud'].size)
+	print("Registers: "+str(dataFrame['latitud'].size))
 else:
 	print ("Usage: python3 E2.py <provice> [<min lon>:<max lon> <min lat>:<max lat>] <in_file> <out_file>")
 	print ("Example python3 E2.py BIZKAIA 42.9:43.5 -3.5:-2.2 in_file.xml out_file.csv")

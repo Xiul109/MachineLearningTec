@@ -7,8 +7,8 @@ import sys
 #Split the accidentsData leaving split_factor * Ndata as training data and  (1-split_factor) * Ndata as test data 
 split_factor=0.6
 
-if(len(sys.argv) is not 3):
-	print("Usage: python3 E5.py <input_file> <output_file>")
+if(len(sys.argv) is not 4):
+	print("Usage: python3 E8.py <training_file> <predict_file> <output_file>")
 	exit()
 
 #Gets the K value
@@ -56,7 +56,7 @@ def getErrorProp(prediction,test):
 	return errors/len(prediction)
 
 k=getK()
-csv_file=csv.DictReader(open('out_file.csv'))
+csv_file=csv.DictReader(open(sys.argv[2]))
 data=list(csv_file)
 worksX=[]
 outData=[]
@@ -66,7 +66,7 @@ for row in data:
 		worksX.append([float(row['longitud']), float(row['latitud'])])
 worksX=np.array(worksX)
 
-csv_file=csv.DictReader(open(sys.argv[2]))
+csv_file=csv.DictReader(open(sys.argv[1]))
 X=[]
 y=[]
 for row in csv_file:
@@ -81,7 +81,7 @@ for i in range(len(outData)):
 	outData[i]['label']=worksY[i]
 
 #Write works Data in a csv
-with open('works.csv', 'w') as csvfile:
+with open(sys.argv[3], 'w') as csvfile:
 	fieldnames = list(outData[0].keys())
 	writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
